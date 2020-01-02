@@ -178,11 +178,12 @@ const SignIn = props => {
       email: formState.values.email,
       password: formState.values.password,
     }).then(function (response) {
-      const token = response.data.token;
+      
+      if (response.data.token != null) {
+        const token = response.data.token;
       localStorage.setItem('token', token);
       console.log(token);
       console.log(response);
-      if (response.data.token != null) {
         history.push('/dashboard');
       }
     }).catch(function (error) {

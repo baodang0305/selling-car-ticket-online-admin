@@ -20,10 +20,9 @@ const useStyles = makeStyles(theme => ({
   }
 }));
 
-const handleSignout = () =>  {
-  console.log('xxx')
-}
-
+const handleSignout = () =>  { 
+  localStorage.removeItem('token');
+};
 const Topbar = props => {
   const { className, onSidebarOpen, ...rest } = props;
 
@@ -74,6 +73,19 @@ const Topbar = props => {
             onClick={onSidebarOpen}
           >
             <MenuIcon />
+          </IconButton>
+          <IconButton
+            className={classes.signOutButton}
+            color="inherit"
+            onClick={handleSignout}
+            to="/sign-in" 
+          >
+            <RouterLink 
+              style={{height: '24px', color: 'inherit'}}
+              to="/sign-in"
+            >
+              <InputIcon />
+            </RouterLink>
           </IconButton>
         </Hidden>
       </Toolbar>
