@@ -8,8 +8,8 @@ import PeopleIcon from '@material-ui/icons/People';
 import ShoppingBasketIcon from '@material-ui/icons/ShoppingBasket';
 import TextFieldsIcon from '@material-ui/icons/TextFields';
 import ImageIcon from '@material-ui/icons/Image';
+import SupervisorAccountIcon from '@material-ui/icons/SupervisedUserCircle';
 import AccountBoxIcon from '@material-ui/icons/AccountBox';
-import LockOpenIcon from '@material-ui/icons/LockOpen';
 
 import { Profile, SidebarNav } from './components';
 import axios from 'axios';
@@ -56,14 +56,14 @@ const Sidebar = props => {
       icon: <PeopleIcon />
     },
     {
+      title: 'Admin',
+      href: '/admin',
+      icon: <SupervisorAccountIcon />
+    },
+    {
       title: 'Products',
       href: '/products',
       icon: <ShoppingBasketIcon />
-    },
-    {
-      title: 'Authentication',
-      href: '/sign-in',
-      icon: <LockOpenIcon />
     },
     {
       title: 'Typography',
