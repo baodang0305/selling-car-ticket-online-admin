@@ -18,6 +18,8 @@ export const BUDGET = 'contracts/BUDGET';
 export const TOTAL = 'contracts/TOTAL';
 export const REPORTS = 'report';
 export const LISTROUTE = 'routes'
+export const ADDTIMEROUTE = 'routes/newtime'
+export const ADDLOCATIONROUTE = 'routes/newlocation' 
 
 
 

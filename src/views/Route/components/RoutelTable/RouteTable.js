@@ -32,9 +32,9 @@ import {
 } from '@material-ui/core';
 import axios from 'axios';
 import jsonPlacesData from '../../../../config/dataPlaces.json'
-import { API, ADDROUTE, DELETEROUTE } from '../../../../config';
-const api = `${API}${ADDROUTE}`;
-const apiDelee = `${API}${DELETEROUTE}`;
+import { API, ADDTIMEROUTE, ADDLOCATIONROUTE } from '../../../../config';
+const api = `${API}${ADDTIMEROUTE}`;
+const apiLocation = `${API}${ADDLOCATIONROUTE}`;
 
 // import { SettingsApplications } from '@material-ui/icons';
 // import AccountDetails from '../../../Account/components/AccountDetails';
@@ -128,11 +128,27 @@ const RoutesTable = props => {
     setSelectedUsers(selectedUsers);
     onSelected(selectedUsers);
   };
-  const handleAddNewTime = () =>{
+  const handleAddNewTime = async () =>{
     console.log(idTime, valuesTime)
+    const header = `Bearer ${localStorage.getItem('token')}`;
+    await axios.post(api, {
+      _id: idTime,
+      time : valuesTime
+    }, {
+      headers: { Authorization: header },
+    });
+    setOpenTime(false)
   }
-  const handleAddNewLocation = () =>{
+  const handleAddNewLocation = async() =>{
     console.log(idLocation, valuesLocation)
+    const header = `Bearer ${localStorage.getItem('token')}`;
+    await axios.post(apiLocation, {
+      _id: idLocation,
+      location : valuesLocation
+    }, {
+      headers: { Authorization: header },
+    });
+    setOpenLocation(false)
   }
   
 
@@ -265,10 +281,10 @@ const RoutesTable = props => {
                           id="demo-simple-select-placeholder-label"
                           labelId="demo-simple-select-placeholder-label-label"
                           onChange={event => handleAddTime(event, Route)}
-                          value={Route.departureTime[0]}
+                          value={Route.departureTime[0].time}
                         >
                           {Route.departureTime.map(item => (
-                            <MenuItem value={item}>{item}:00</MenuItem>
+                            <MenuItem value={item.time}>{item.time}:00</MenuItem>
                           ))}
                           <MenuItem value="AddTime">Add new time</MenuItem>
                           
@@ -289,10 +305,10 @@ const RoutesTable = props => {
                           id="demo-simple-select-placeholder-label"
                           labelId="demo-simple-select-placeholder-label-label"
                           onChange={event => handleAddLocation(event, Route)}
-                          value={Route.getOnDeparture[0]}
+                          value={Route.getOnDeparture[0].departure}
                         >
                           {Route.getOnDeparture.map(item => (
-                            <MenuItem value={item}>{item}</MenuItem>
+                            <MenuItem value={item.departure}>{item.departure}</MenuItem>
                           ))}
                           <MenuItem value="AddLocation" >Add New Location</MenuItem>
                           
@@ -340,7 +356,7 @@ const RoutesTable = props => {
               onChange={handleChangeTime}
               required
               type="number"
-              value={updateTime(valuesTime) || 0}
+              value={updateTime(valuesTime) || ''}
             />
 
           </DialogContent>

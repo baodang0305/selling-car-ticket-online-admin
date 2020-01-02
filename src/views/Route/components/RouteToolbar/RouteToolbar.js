@@ -68,10 +68,7 @@ const UsersToolbar = props => {
       ...values,
       [event.target.name]: event.target.value
     });
-    // setValuesDepart(listProvince.indexOf(values.departure))
-    // if( values.departure !== null){
-    //   setValuesDistrict(listDistrict[valueDepart])
-    // }
+ 
   };
   const handleClose = () => {
     setOpen(false);
