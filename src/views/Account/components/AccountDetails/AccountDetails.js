@@ -1,6 +1,8 @@
-import React, { useState } from 'react';
+/* eslint-disable no-console */
+import React, { useState , useEffect  } from 'react';
 import clsx from 'clsx';
 import PropTypes from 'prop-types';
+
 import { makeStyles } from '@material-ui/styles';
 import {
   Card,
@@ -18,19 +20,23 @@ const useStyles = makeStyles(() => ({
 }));
 
 const AccountDetails = props => {
-  const { className, ...rest } = props;
-
+  const { className  ,...rest } = props;
   const classes = useStyles();
-
   const [values, setValues] = useState({
-    firstName: 'Shen',
-    lastName: 'Zhi',
-    email: 'shen.zhi@devias.io',
-    phone: '09888',
-    state: 'Alabama',
-    country: 'USA'
+    firstName: '',
+    lastName: '',
+    email: '',
+    phone: '',
+    address: ''
   });
+  const {user} = rest;
 
+  useEffect(() => {
+    setValues(user);
+  }, [user]);
+  console.log(values);
+  console.log('test account detail:',user);
+  
   const handleChange = event => {
     setValues({
       ...values,
@@ -38,20 +44,9 @@ const AccountDetails = props => {
     });
   };
 
-  const states = [
-    {
-      value: 'alabama',
-      label: 'Alabama'
-    },
-    {
-      value: 'new-york',
-      label: 'New York'
-    },
-    {
-      value: 'san-francisco',
-      label: 'San Francisco'
-    }
-  ];
+  
+
+
 
   return (
     <Card
@@ -85,7 +80,7 @@ const AccountDetails = props => {
                 name="firstName"
                 onChange={handleChange}
                 required
-                value={values.firstName}
+                value={values.firstName || ''}
                 variant="outlined"
               />
             </Grid>
@@ -101,7 +96,7 @@ const AccountDetails = props => {
                 name="lastName"
                 onChange={handleChange}
                 required
-                value={values.lastName}
+                value={values.lastName || ''}
                 variant="outlined"
               />
             </Grid>
@@ -112,12 +107,15 @@ const AccountDetails = props => {
             >
               <TextField
                 fullWidth
+                InputProps={{
+                  readOnly: true,
+                }}
                 label="Email Address"
                 margin="dense"
                 name="email"
                 onChange={handleChange}
                 required
-                value={values.email}
+                value={values.email || ''}
                 variant="outlined"
               />
             </Grid>
@@ -133,7 +131,7 @@ const AccountDetails = props => {
                 name="phone"
                 onChange={handleChange}
                 type="number"
-                value={values.phone}
+                value={values.phone || ''}
                 variant="outlined"
               />
             </Grid>
@@ -144,40 +142,12 @@ const AccountDetails = props => {
             >
               <TextField
                 fullWidth
-                label="Select State"
+                label="Address"
                 margin="dense"
-                name="state"
+                name="address"
                 onChange={handleChange}
                 required
-                select
-                // eslint-disable-next-line react/jsx-sort-props
-                SelectProps={{ native: true }}
-                value={values.state}
-                variant="outlined"
-              >
-                {states.map(option => (
-                  <option
-                    key={option.value}
-                    value={option.value}
-                  >
-                    {option.label}
-                  </option>
-                ))}
-              </TextField>
-            </Grid>
-            <Grid
-              item
-              md={6}
-              xs={12}
-            >
-              <TextField
-                fullWidth
-                label="Country"
-                margin="dense"
-                name="country"
-                onChange={handleChange}
-                required
-                value={values.country}
+                value={values.address || ''}
                 variant="outlined"
               />
             </Grid>
@@ -188,6 +158,7 @@ const AccountDetails = props => {
         <CardActions>
           <Button
             color="primary"
+            // onClick ={updateAdminUser}
             variant="contained"
           >
             Save details

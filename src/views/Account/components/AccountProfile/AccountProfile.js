@@ -1,7 +1,10 @@
+/* eslint-disable no-console */
 import React, {useState} from 'react';
 import PropTypes from 'prop-types';
 import clsx from 'clsx';
-import moment from 'moment';
+import { getInitials } from 'helpers';
+
+// import moment from 'moment';
 import { makeStyles } from '@material-ui/styles';
 import {
   Card,
@@ -18,7 +21,7 @@ const getBase64 = (img, callback) => {
   const reader = new FileReader();
   reader.addEventListener('load', () => callback(reader.result));
   reader.readAsDataURL(img);
-}
+};
 
 const useStyles = makeStyles(theme => ({
   root: {},
@@ -44,17 +47,13 @@ const useStyles = makeStyles(theme => ({
 const AccountProfile = props => {
   const { className, ...rest } = props;
   
+  // eslint-disable-next-line no-unused-vars
   const [avatar, setAvatar] = useState(null);
   const [urlAvatar, setUrlAvatar] = useState('');
   const classes = useStyles();
 
-  const user = {
-    name: 'Shen Zhi',
-    city: 'Los Angeles',
-    country: 'USA',
-    timezone: 'GTM-7',
-    avatar: '/images/avatars/avatar_11.png'
-  };
+ 
+  console.log(rest.user);
 
   const handleChooseFile = e =>{
     let file = e.target.files[0];
@@ -62,7 +61,9 @@ const AccountProfile = props => {
     getBase64(file, imageUrl =>
       setUrlAvatar(imageUrl)
     );
-  }
+  };
+
+  const {user} = rest;
 
   return (
     <Card
@@ -76,21 +77,22 @@ const AccountProfile = props => {
               gutterBottom
               variant="h2"
             >
-              John Doe
+              {user.lastName}
             </Typography>
             <Typography
               className={classes.locationText}
               color="textSecondary"
               variant="body1"
             >
-              {user.city}, {user.country}
+              {user.address}
             </Typography>
             <Typography
               className={classes.dateText}
               color="textSecondary"
               variant="body1"
             >
-              {moment().format('hh:mm A')} ({user.timezone})
+              {user.phone}
+              {/* {moment().format('hh:mm A')} ({user.timezone}) */}
             </Typography>
           </div>
           <input
@@ -110,7 +112,9 @@ const AccountProfile = props => {
               className={classes.avatar} 
               component="span"
               src={urlAvatar === '' ? user.avatar : urlAvatar}
-            />
+            >
+              {getInitials(user.lastName)}
+            </Avatar>
           </label>
         </div>
         <div className={classes.progress}>
