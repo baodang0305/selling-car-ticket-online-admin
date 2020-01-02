@@ -14,7 +14,9 @@ import {
   Button,
   TextField
 } from '@material-ui/core';
-
+import axios from 'axios';
+import {API ,  UPDATEADMIN} from '../../../../config';
+const api = `${API}${UPDATEADMIN}`;
 const useStyles = makeStyles(() => ({
   root: {}
 }));
@@ -43,8 +45,30 @@ const AccountDetails = props => {
       [event.target.name]: event.target.value
     });
   };
+  const header = `Bearer ${localStorage.getItem('token')}`;
 
-  
+  const loadData = async () => {
+    try {
+      const response = await axios.post(api, {
+        email:values.email,
+        firstName: values.firstName,
+        lastName: values.lastName,
+        address: values.address,
+        phone: values.phone,
+      }, {
+        headers: { Authorization: header },
+      });
+      console.log(response.data);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  const updateAdminUser = () =>{
+    loadData();
+    
+    console.log('test update', values);
+  };
 
 
 
@@ -158,7 +182,7 @@ const AccountDetails = props => {
         <CardActions>
           <Button
             color="primary"
-            // onClick ={updateAdminUser}
+            onClick ={updateAdminUser}
             variant="contained"
           >
             Save details
