@@ -19,7 +19,6 @@ const RouteList = () => {
   const classes = useStyles();
   let [Route, setRoutes] = useState([]);
   const [selectedRoutes, setSelectedRoutes] = useState([]);
-  console.log(Route)
   useEffect(() => {
     const header = `Bearer ${localStorage.getItem('token')}`;
     const loadData = async () => {
@@ -27,20 +26,19 @@ const RouteList = () => {
         const response = await axios.get(api, {
           headers: { Authorization: header },
         });
-        // console.log(response.data);
         setRoutes(response.data);
       } catch (error) {
         console.log(error);
       }
     };
     loadData();
-  }, []);
+  }, [Route]);
   const setSelected = (value) => {
     setSelectedRoutes(value);
   };
   return (
     <div className={classes.root}>
-      <SkillsToolbar selectedSkill = {selectedRoutes}/>
+      <SkillsToolbar selectedRoutes = {selectedRoutes}/>
       <div className={classes.content}>
         <SkillsTable 
           onSelected = {setSelected}

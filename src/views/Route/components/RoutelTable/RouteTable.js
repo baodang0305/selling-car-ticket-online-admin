@@ -19,12 +19,33 @@ import {
   TablePagination,
   MenuItem,
   Select,
-  InputLabel
+  InputLabel,
+  Button,
+  DialogContentText,
+  Dialog,
+  DialogTitle,
+  DialogContent,
+  TextField,
+  DialogActions
+
   // Button,
 } from '@material-ui/core';
+import axios from 'axios';
+import jsonPlacesData from '../../../../config/dataPlaces.json'
+import { API, ADDROUTE, DELETEROUTE } from '../../../../config';
+const api = `${API}${ADDROUTE}`;
+const apiDelee = `${API}${DELETEROUTE}`;
+
 // import { SettingsApplications } from '@material-ui/icons';
 // import AccountDetails from '../../../Account/components/AccountDetails';
-
+const listDistrict = Object.values(jsonPlacesData).map((value) => {
+  return Object.values(value.districts).map((value) => {
+    return value;
+  });
+});
+const listProvince = Object.values(jsonPlacesData).map((value) => {
+  return value.name;
+});
 const useStyles = makeStyles(theme => ({
   root: {},
   content: {
@@ -54,16 +75,44 @@ const useStyles = makeStyles(theme => ({
   }
 }));
 
+
 const RoutesTable = props => {
   const { className, Route, ...rest } = props;
   const {onSelected} = rest;
   const classes = useStyles();
-
+  const [openTime, setOpenTime] = useState(false);
+  const [idTime, setidTime] = useState('');
+  const [idLocation, setidLocation] = useState('');
+  const [idDepart, setidDepart] = useState([{0:''}]);
+  const [openLocation, setOpenLocation] = useState(false);
   const [selectedUsers, setSelectedUsers] = useState([]);
   const [rowsPerPage, setRowsPerPage] = useState(10);
   const [page, setPage] = useState(0);
-  // const [showFromEdit, setShowFromEdit] = useState(false);
-  // const [userUpdate , setUserUpdate] = useState([]);
+  const [valuesTime, setValuesTime] = useState({
+    time : 0
+  });
+  const [valuesLocation, setValuesLocation] = useState({
+    location : ''
+  });
+  const handleChangeTime = event => {
+    setValuesTime({
+      ...valuesTime,
+      [event.target.name]: event.target.value
+    });
+  };
+  const handleChangeLocation = event => {
+    setValuesLocation({
+      ...valuesLocation,
+      [event.target.name]: event.target.value
+    });
+  };
+  const handleCloseTime = () => {
+    setOpenTime(false);
+  };
+  const handleCloseLocation = () => {
+    setOpenLocation(false);
+  };
+
 
   const handleSelectAll = event => {
     const { Route } = props;
@@ -79,6 +128,13 @@ const RoutesTable = props => {
     setSelectedUsers(selectedUsers);
     onSelected(selectedUsers);
   };
+  const handleAddNewTime = () =>{
+    console.log(idTime, valuesTime)
+  }
+  const handleAddNewLocation = () =>{
+    console.log(idLocation, valuesLocation)
+  }
+  
 
   const handleSelectOne = (event, id) => {
     const selectedIndex = selectedUsers.indexOf(id);
@@ -111,12 +167,30 @@ const RoutesTable = props => {
   const handleAddLocation = (event,value)  => {
     if (event.target.value === 'AddLocation'){
       console.log('location:',value)
+      setOpenLocation(true);
+      setidLocation(value._id)
+      setidDepart(listDistrict[listProvince.indexOf(value.departure)])
+      
     }
   };
   const handleAddTime = (event,value)  => {
     if (event.target.value === 'AddTime'){
-      console.log('time:',value)
+      setOpenTime(true);
+      setidTime(value._id)
     }
+  };
+  const updateTime = (values)=>{
+    if (valuesTime.time > 25){
+      return 24;
+    }  else if (valuesTime.time < 0) {
+      return 0
+    } else {
+      return valuesTime.time
+    }
+  };
+  const updateLocation = (values)=>{
+    return valuesLocation.location
+    
   };
   
   return (
@@ -245,8 +319,111 @@ const RoutesTable = props => {
           rowsPerPageOptions={[5, 10, 25]}
         />
       </CardActions>
-      
+      <div>
+        <Dialog
+          aria-labelledby="form-dialog-title"
+          onClose={handleCloseTime}
+          open={openTime}
+        >
+          <DialogTitle id="form-dialog-title">Add new Time</DialogTitle>
+          <DialogContent>
+            <DialogContentText>
+              Add new time into your Route
+            </DialogContentText>
+            <TextField
+              autoFocus
+              fullWidth
+              id="time"
+              label="Time"
+              margin="dense"
+              name = "time"
+              onChange={handleChangeTime}
+              required
+              type="number"
+              value={updateTime(valuesTime) || 0}
+            />
+
+          </DialogContent>
+          <DialogActions>
+            <Button
+              color="primary"
+              onClick={handleCloseTime}
+            >
+              Cancel
+            </Button>
+            <Button
+              color="primary"
+              onClick={handleAddNewTime}
+            >
+              ADD
+            </Button>
+          </DialogActions>
+        </Dialog>
+      </div>
+      <div>
+        <Dialog
+          aria-labelledby="form-dialog-title"
+          onClose={handleCloseLocation}
+          open={openLocation}
+        >
+          <DialogTitle id="form-dialog-title">Add new location</DialogTitle>
+          <DialogContent>
+            <DialogContentText>
+              Add new location to depart
+            </DialogContentText>
+            {/* <TextField
+              autoFocus
+              fullWidth
+              id="location"
+              label="Location"
+              margin="dense"
+              name = "location"
+              onChange={handleChangeLocation}
+              required
+              type="text"
+              value={updateLocation(valuesLocation) || ''}
+            /> */}
+            <FormControl className={classes.formControl} fullWidth m={2}>
+              <InputLabel
+                id="demo-simple-select-placeholder-label-label"
+                shrink
+              >
+                Departure
+                </InputLabel>
+              <Select
+                className={classes.selectEmpty}
+                // displayEmpty
+                id="demo-simple-select-placeholder-label"
+                labelId="demo-simple-select-placeholder-label-label"
+                onChange={handleChangeLocation}
+                name = 'departure'
+              >
+                {idDepart.map(item => (
+                  <MenuItem value={item}>{item}</MenuItem>
+                ))}
+
+              </Select>
+            </FormControl>
+
+          </DialogContent>
+          <DialogActions>
+            <Button
+              color="primary"
+              onClick={handleCloseLocation}
+            >
+              Cancel
+            </Button>
+            <Button
+              color="primary"
+              onClick={handleAddNewLocation}
+            >
+              ADD
+            </Button>
+          </DialogActions>
+        </Dialog>
+      </div>
     </Card>
+    
     
   );
 };

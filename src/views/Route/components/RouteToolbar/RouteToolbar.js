@@ -3,20 +3,25 @@ import React, { useState } from 'react';
 import PropTypes from 'prop-types';
 import clsx from 'clsx';
 import { makeStyles } from '@material-ui/styles';
-import { Button,
+import {
+  Button,
   DialogContentText,
   Dialog,
   DialogTitle,
   DialogContent,
   TextField,
-  DialogActions
-
+  DialogActions,
+  MenuItem,
+  Select,
+  InputLabel,
+  FormControl
 } from '@material-ui/core';
 import axios from 'axios';
 import { SearchInput } from 'components';
-import {API,ADDSKILL, DELETESKILL} from '../../../../config';
-const api = `${API}${ADDSKILL}`;
-const apiDelee = `${API}${DELETESKILL}`;
+import { API, ADDROUTE, DELETEROUTE } from '../../../../config';
+import jsonPlacesData from '../../../../config/dataPlaces.json'
+const api = `${API}${ADDROUTE}`;
+const apiDelee = `${API}${DELETEROUTE}`;
 
 const useStyles = makeStyles(theme => ({
   root: {},
@@ -40,37 +45,49 @@ const useStyles = makeStyles(theme => ({
   }
 }));
 
+const listProvince = Object.values(jsonPlacesData).map((value) => {
+  return value.name;
+});
+
 const UsersToolbar = props => {
   const { className, ...rest } = props;
   const classes = useStyles();
-  const {selectedSkill} = rest;
-  // const handleRenderComponent = () =>{
-  //   setShowFromEdit(true);
-  // };
+  const { selectedRoutes } = rest;
+
   const [open, setOpen] = useState(false);
   const [values, setValues] = useState({
-    name : ''
+    fare:0,
+    distance:0,
+    typeOfCar : ''
   });
+
+
 
   const handleChange = event => {
     setValues({
       ...values,
       [event.target.name]: event.target.value
     });
+    // setValuesDepart(listProvince.indexOf(values.departure))
+    // if( values.departure !== null){
+    //   setValuesDistrict(listDistrict[valueDepart])
+    // }
   };
   const handleClose = () => {
     setOpen(false);
   };
 
-  const handleAdd = () =>{
+  const handleAdd = () => {
     console.log(values);
     const header = `Bearer ${localStorage.getItem('token')}`;
-     
     console.log(header);
     axios.post(api, {
-      name: values.name,
-      description: values.description
-    },{
+      departure: values.departure,
+      destination: values.destination,
+      typeOfCar:values.typeOfCar,
+      distance:values.distance,
+      fare : values.fare
+    }, {
       headers: { Authorization: header },
     }).then(function (response) {
       console.log(response);
@@ -83,20 +100,21 @@ const UsersToolbar = props => {
     setOpen(true);
   };
 
-  const removeSkill = async (value)=>{
+  const removeRoute = async (value) => {
     const header = `Bearer ${localStorage.getItem('token')}`;
-    await axios.post(apiDelee,{
-      name: value
+    await axios.post(apiDelee, {
+      _id: value
     }, {
       headers: { Authorization: header },
     });
+    // console.log(value)
   };
-  const handleDelete = ()=>{
-    selectedSkill.forEach(element => {
-      removeSkill(element);
+  const handleDelete = () => {
+    selectedRoutes.forEach(element => {
+      removeRoute(element);
     });
   };
-
+ 
 
   return (
     <div
@@ -105,16 +123,16 @@ const UsersToolbar = props => {
     >
       <div className={classes.row}>
         <span className={classes.spacer} />
-        <Button 
-          className={classes.exportButton} 
-          onClick = {handleDelete}
+        <Button
+          className={classes.exportButton}
+          onClick={handleDelete}
         >DELETE</Button>
         <Button
           color="primary"
           onClick={handleClickOpen}
           variant="contained"
         >
-          Add Skill
+          Add Route
         </Button>
       </div>
       <div className={classes.row}>
@@ -125,38 +143,105 @@ const UsersToolbar = props => {
       </div>
       <div>
         <Dialog
-          aria-labelledby="form-dialog-title"
+          fullWidth={true}
+          maxWidth='sm'
+          aria-labelledby="max-width-dialog-title"
           onClose={handleClose}
           open={open}
         >
-          <DialogTitle id="form-dialog-title">Add new Skill</DialogTitle>
+          <DialogTitle id="form-dialog-title">Add new Route</DialogTitle>
           <DialogContent>
             <DialogContentText>
-              Add new Skill into your website
+              Add new route into your website
             </DialogContentText>
+            <div>
+            <FormControl className={classes.formControl} fullWidth m={2}>
+              <InputLabel
+                id="demo-simple-select-placeholder-label-label"
+                shrink
+              >
+                Departure
+                </InputLabel>
+              <Select
+                className={classes.selectEmpty}
+                // displayEmpty
+                id="demo-simple-select-placeholder-label"
+                labelId="demo-simple-select-placeholder-label-label"
+                onChange={handleChange}
+                name = 'departure'
+              >
+                {listProvince.map(item => (
+                  <MenuItem value={item}>{item}</MenuItem>
+                ))}
+
+              </Select>
+            </FormControl>
+            </div>
+            <div></div>
+            <div>
+            <FormControl className={classes.formControl} fullWidth m={2}>
+              <InputLabel
+                id="demo-simple-select-placeholder-label-label"
+                shrink
+              >
+                Destination
+                </InputLabel>
+              <Select
+                className={classes.selectEmpty}
+                // displayEmpty
+                id="demo-simple-select-placeholder-label"
+                labelId="demo-simple-select-placeholder-label-label"
+                onChange={handleChange}
+                name = 'destination'
+              >
+                {listProvince.map(item => (
+                  <MenuItem value={item}>{item}</MenuItem>
+                ))}
+
+              </Select>
+            </FormControl>
+            </div>
+            <div></div>
+            <div>
             <TextField
-              autoFocus
               fullWidth
-              id="name"
-              label="Name of Skill"
+              id="typeOfCar"
+              label="Type Of Car"
               margin="dense"
-              name = "name"
+              name = "typeOfCar"
               onChange={handleChange}
               required
               type="text"
-              value = {values.name}
+              value = {values.typeOfCar}
             />
+            </div>
+            <div></div>
+            <div>
             <TextField
               fullWidth
-              id="description"
-              label="Description"
+              id="distance"
+              label="Distance"
               margin="dense"
-              name = "description"
+              name = "distance"
               onChange={handleChange}
               required
-              type="text"
-              value = {values.description}
+              type="number"
+              value = {values.distance}
             />
+            </div>
+            <div>
+            <TextField
+              fullWidth
+              id="fare"
+              label="cost"
+              margin="dense"
+              name = "fare"
+              onChange={handleChange}
+              required
+              type="number"
+              value = {values.fare}
+            />
+            </div>
           </DialogContent>
           <DialogActions>
             <Button

@@ -1,11 +1,13 @@
+/* eslint-disable no-console */
 import React from 'react';
 import PropTypes from 'prop-types';
 import clsx from 'clsx';
 import { makeStyles } from '@material-ui/styles';
 import { Button } from '@material-ui/core';
-
 import { SearchInput } from 'components';
-
+import axios from 'axios';
+import {API,DELETEUSER} from '../../../../config';
+const api = `${API}${DELETEUSER}`;
 const useStyles = makeStyles(theme => ({
   root: {},
   row: {
@@ -30,8 +32,23 @@ const useStyles = makeStyles(theme => ({
 
 const UsersToolbar = props => {
   const { className, ...rest } = props;
-
+  const {selectedUsers} = rest;
   const classes = useStyles();
+
+  const removeUser = async (value)=>{
+    const header = `Bearer ${localStorage.getItem('token')}`;
+    await axios.post(api,{
+      email: value
+    }, {
+      headers: { Authorization: header },
+    });
+  };
+  const deleteUsers = ()=>{
+    selectedUsers.forEach(element => {
+      removeUser(element);
+    });
+    
+  };
 
   return (
     <div
@@ -40,10 +57,13 @@ const UsersToolbar = props => {
     >
       <div className={classes.row}>
         <span className={classes.spacer} />
-        <Button className={classes.importButton}>Import</Button>
-        <Button className={classes.exportButton}>Export</Button>
+        <Button 
+          className={classes.exportButton} 
+          onClick={deleteUsers}
+        >Delete</Button>
         <Button
           color="primary"
+          href =  "https://tutor-reactjs.firebaseapp.com/signup"
           variant="contained"
         >
           Add user

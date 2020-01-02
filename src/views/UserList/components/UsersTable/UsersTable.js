@@ -1,7 +1,8 @@
-import React, { useState } from 'react';
+/* eslint-disable no-console */
+import React, { useState, useRef, useEffect } from 'react';
 import clsx from 'clsx';
 import PropTypes from 'prop-types';
-import moment from 'moment';
+// import moment from 'moment';
 import PerfectScrollbar from 'react-perfect-scrollbar';
 import { makeStyles } from '@material-ui/styles';
 import {
@@ -19,9 +20,9 @@ import {
   TablePagination,
   Button,
 } from '@material-ui/core';
-import { SettingsApplications } from '@material-ui/icons'
+import { SettingsApplications } from '@material-ui/icons';
 import { getInitials } from 'helpers';
-import AccountDetails from '../../../Account/components/AccountDetails';
+import UserDetail from '../UserDetail';
 
 const useStyles = makeStyles(theme => ({
   root: {},
@@ -54,13 +55,13 @@ const useStyles = makeStyles(theme => ({
 
 const UsersTable = props => {
   const { className, users, ...rest } = props;
-
   const classes = useStyles();
-
+  const {onSelected} = rest;
   const [selectedUsers, setSelectedUsers] = useState([]);
   const [rowsPerPage, setRowsPerPage] = useState(10);
   const [page, setPage] = useState(0);
   const [showFromEdit, setShowFromEdit] = useState(false);
+  const [userUpdate, setUserUpdate] = useState([]);
 
   const handleSelectAll = event => {
     const { users } = props;
@@ -68,20 +69,21 @@ const UsersTable = props => {
     let selectedUsers;
 
     if (event.target.checked) {
-      selectedUsers = users.map(user => user.id);
+      selectedUsers = users.map(user => user.email);
     } else {
       selectedUsers = [];
     }
 
     setSelectedUsers(selectedUsers);
+    onSelected(selectedUsers);
   };
 
-  const handleSelectOne = (event, id) => {
-    const selectedIndex = selectedUsers.indexOf(id);
+  const handleSelectOne = (event, email) => {
+    const selectedIndex = selectedUsers.indexOf(email);
     let newSelectedUsers = [];
 
     if (selectedIndex === -1) {
-      newSelectedUsers = newSelectedUsers.concat(selectedUsers, id);
+      newSelectedUsers = newSelectedUsers.concat(selectedUsers, email);
     } else if (selectedIndex === 0) {
       newSelectedUsers = newSelectedUsers.concat(selectedUsers.slice(1));
     } else if (selectedIndex === selectedUsers.length - 1) {
@@ -94,6 +96,7 @@ const UsersTable = props => {
     }
 
     setSelectedUsers(newSelectedUsers);
+    onSelected(newSelectedUsers);
   };
 
   const handlePageChange = (event, page) => {
@@ -103,21 +106,87 @@ const UsersTable = props => {
   const handleRowsPerPageChange = event => {
     setRowsPerPage(event.target.value);
   };
+  const setShow = (value) => {
+    setShowFromEdit(value);
+
+  };
+  const isFirstRender = useRef(true);
+
+  useEffect(() => {
+    console.log('isFirstRender', isFirstRender.current);
+    if (isFirstRender.current) {
+      isFirstRender.current = false;
+    }
+
+  }, []);
 
   // eslint-disable-next-line react/no-multi-comp
-  const handleRenderComponent = () =>{ setShowFromEdit(true) }
+  const handleRenderComponent = (user) => {
+    setUserUpdate(user);
+    setShow(true);
+    console.log(user.user);
+  };
 
+  const isRole = (user) => {
+    if (user.isTutor) {
+      return 'Teacher';
+    } else {
+      return 'Student';
+    }
+  };
+  const isActive = (user) => {
+    if (user.isActivated) {
+      return 'True';
+    } else {
+      return 'False';
+    }
+  };
+
+  function useOutsideAlerter(ref) {
+    /**
+     * Alert if clicked on outside of element
+     */
+    function handleClickOutside(event) {
+      if (ref.current && !ref.current.contains(event.target)) {
+        // alert("You clicked outside of me!");
+        setShowFromEdit(false);
+      }
+    }
+
+
+
+    useEffect(() => {
+      // Bind the event listener
+      document.addEventListener('mousedown', handleClickOutside);
+      return () => {
+        // Unbind the event listener on clean up
+        document.removeEventListener('mousedown', handleClickOutside);
+      };
+    });
+  }
+
+  const wrapperRef = useRef(null);
+  useOutsideAlerter(wrapperRef);
   return (
     <Card
       {...rest}
       className={clsx(classes.root, className)}
     >
       <CardContent className={classes.content}>
-        {showFromEdit ? <div className={classes.displayCombonent}> 
-          <Card className={classes.cardDetail}> 
-            <AccountDetails />
-          </Card>
-        </div> : null}
+        {showFromEdit ?
+          <div
+            className={classes.displayCombonent}
+            ref={wrapperRef}
+          >
+            <Card
+              className={classes.cardDetail}
+            >
+              <UserDetail
+                onClickUpdate={setShow}
+                user={userUpdate.user}
+              />
+            </Card>
+          </div> : null}
         <PerfectScrollbar>
           <div className={classes.inner}>
             <Table>
@@ -136,9 +205,9 @@ const UsersTable = props => {
                   </TableCell>
                   <TableCell>Name</TableCell>
                   <TableCell>Email</TableCell>
-                  <TableCell>Location</TableCell>
-                  <TableCell>Phone</TableCell>
-                  <TableCell>Registration date</TableCell>
+                  <TableCell>Name</TableCell>
+                  <TableCell>Role</TableCell>
+                  <TableCell>Active</TableCell>
                   <TableCell>Edit</TableCell>
                 </TableRow>
               </TableHead>
@@ -147,14 +216,14 @@ const UsersTable = props => {
                   <TableRow
                     className={classes.tableRow}
                     hover
-                    key={user.id}
-                    selected={selectedUsers.indexOf(user.id) !== -1}
+                    key={user.email}
+                    selected={selectedUsers.indexOf(user.email) !== -1}
                   >
                     <TableCell padding="checkbox">
                       <Checkbox
-                        checked={selectedUsers.indexOf(user.id) !== -1}
+                        checked={selectedUsers.indexOf(user.email) !== -1}
                         color="primary"
-                        onChange={event => handleSelectOne(event, user.id)}
+                        onChange={event => handleSelectOne(event, user.email)}
                         value="true"
                       />
                     </TableCell>
@@ -162,25 +231,27 @@ const UsersTable = props => {
                       <div className={classes.nameContainer}>
                         <Avatar
                           className={classes.avatar}
-                          src={user.avatarUrl}
+                          src={user.urlAvatar}
                         >
-                          {getInitials(user.name)}
+                          {getInitials(user.lastName)}
                         </Avatar>
-                        <Typography variant="body1">{user.name}</Typography>
+                        <Typography variant="body1">{user.lastName}</Typography>
                       </div>
                     </TableCell>
                     <TableCell>{user.email}</TableCell>
                     <TableCell>
-                      {user.address.city}, {user.address.state},{' '}
-                      {user.address.country}
+                      {user.name}
                     </TableCell>
-                    <TableCell>{user.phone}</TableCell>
+                    <TableCell>{isRole(user)}</TableCell>
                     <TableCell>
-                      {moment(user.createdAt).format('DD/MM/YYYY')}
+                      {isActive(user)}
+                      {/* {moment(user.createdAt).format('DD/MM/YYYY')} */}
                     </TableCell>
                     <TableCell>
-                      <Button onClick={handleRenderComponent}>
-                        <SettingsApplications/>
+                      <Button
+                        onClick={() => handleRenderComponent({ user })}
+                      >
+                        <SettingsApplications />
                       </Button>
                     </TableCell>
                   </TableRow>
