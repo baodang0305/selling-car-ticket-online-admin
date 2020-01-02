@@ -10,7 +10,7 @@ import TextFieldsIcon from '@material-ui/icons/TextFields';
 import ImageIcon from '@material-ui/icons/Image';
 import SupervisorAccountIcon from '@material-ui/icons/SupervisedUserCircle';
 import AccountBoxIcon from '@material-ui/icons/AccountBox';
-
+import SubwayIcon from '@material-ui/icons/Subway';
 import { Profile, SidebarNav } from './components';
 import axios from 'axios';
 import { API, ADMIN } from '../../../../config';
@@ -54,6 +54,11 @@ const Sidebar = props => {
       title: 'Users',
       href: '/users',
       icon: <PeopleIcon />
+    },
+    {
+      title: 'Route',
+      href: '/routes',
+      icon: <SubwayIcon />
     },
     {
       title: 'Admin',

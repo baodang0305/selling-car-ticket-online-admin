@@ -18,6 +18,7 @@ export const UPDATEWALLETADMIN = 'admin/updateWallet';
 export const BUDGET = 'contracts/BUDGET';
 export const TOTAL = 'contracts/TOTAL';
 export const REPORTS = 'report';
+export const LISTROUTE = 'routes'
 
 
 

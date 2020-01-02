@@ -6,5 +6,6 @@ export { default as ProductList } from './ProductList';
 export { default as SignIn } from './SignIn';
 export { default as SignUp } from './SignUp';
 export { default as AdminList} from './AdminList';
+export { default as Routes} from './Route';
 export { default as Typography } from './Typography';
 export { default as UserList } from './UserList';
