@@ -204,10 +204,7 @@ const RoutesTable = props => {
       return valuesTime.time
     }
   };
-  const updateLocation = (values)=>{
-    return valuesLocation.location
-    
-  };
+
   
   return (
     <Card
