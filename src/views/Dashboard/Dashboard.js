@@ -7,14 +7,12 @@ import {
   TotalUsers,
   TotalProfit,
   LatestSales,
-  UsersByDevice,
-  LatestProducts,
-  LatestOrders
 } from './components';
 import axios from 'axios';
-import { API, TOTAL,COUNT } from '../../config';
+import { API, TOTAL,COUNT,CHART } from '../../config';
 const apiTotal = `${API}${TOTAL}`;
 const apiCount = `${API}${COUNT}`;
+const apiChart = `${API}${CHART}`;
 const useStyles = makeStyles(theme => ({
   root: {
     padding: theme.spacing(4)
@@ -27,6 +25,7 @@ const Dashboard = () => {
   const classes = useStyles();
   const [total, setTotal] = useState();
   const [count, setCount] = useState();
+  const [chart, setChart] = useState({});
   const header = `Bearer ${localStorage.getItem('token')}`;
 const loadTotal = async () => {
   try {
@@ -35,7 +34,6 @@ const loadTotal = async () => {
     });
     const {data} = response.data[0];
     setTotal(data);
-    console.log(response.data);
   } catch (error) {
     console.log(error);
   }
@@ -47,14 +45,32 @@ const loadCount = async () => {
     });
     const {data} = response.data[0];
     setCount(data);
-    console.log(response.data);
   } catch (error) {
     console.log(error);
   }
 };
+const loadChart = async () => {
+  try {
+    const response = await axios.get(apiChart, {
+      headers: { Authorization: header },
+    });
+      //  response.data;
+    // const {_month} = response._id;
+    // setChart(data);
+    // setMonth(_month)
+    const data  = response.data
+    
+    setChart(data)
+
+  } catch (error) {
+    console.log(error);
+  }
+};
+console.log('chart:',chart)
 useEffect(() => {
   loadTotal();
   loadCount();
+  loadChart();
   // eslint-disable-next-line
 }, []);
   return (
@@ -97,35 +113,11 @@ useEffect(() => {
           xl={9}
           xs={12}
         >
-          <LatestSales />
+          <LatestSales  chart = {chart}/>
         </Grid>
-        <Grid
-          item
-          lg={4}
-          md={6}
-          xl={3}
-          xs={12}
-        >
-          <UsersByDevice />
-        </Grid>
-        <Grid
-          item
-          lg={4}
-          md={6}
-          xl={3}
-          xs={12}
-        >
-          <LatestProducts />
-        </Grid>
-        <Grid
-          item
-          lg={8}
-          md={12}
-          xl={9}
-          xs={12}
-        >
-          <LatestOrders />
-        </Grid>
+        
+       
+        
       </Grid>
     </div>
   );

@@ -1,6 +1,6 @@
 import React from 'react';
 import clsx from 'clsx';
-import PropTypes from 'prop-types';
+import PropTypes, { object } from 'prop-types';
 import { Bar } from 'react-chartjs-2';
 import { makeStyles } from '@material-ui/styles';
 import {
@@ -11,10 +11,9 @@ import {
   Divider,
   Button
 } from '@material-ui/core';
-import ArrowDropDownIcon from '@material-ui/icons/ArrowDropDown';
 import ArrowRightIcon from '@material-ui/icons/ArrowRight';
-
-import { data, options } from './chart';
+import palette from 'theme/palette';
+import {  options } from './chart';
 
 const useStyles = makeStyles(() => ({
   root: {},
@@ -28,10 +27,36 @@ const useStyles = makeStyles(() => ({
 }));
 
 const LatestSales = props => {
+  const {chart}  = props
+  // const {month} = props
+  console.log(chart)
+  const valueData = Object.values(chart).map((value) => {
+    return value.data;
+});
+const valueDatamonth = Object.values(chart).map((value) => {
+  return Object.values(value._id).map((value) => {
+    return value;
+  });
+});
+console.log(valueDatamonth)
+console.log('value data',valueData)
+  
+   const data = {
+    labels: valueDatamonth,
+    datasets: [
+      {
+        label: 'This year',
+        backgroundColor: palette.primary.main,
+        data: valueData
+      }
+    ]
+  };
+ 
+  
   const { className, ...rest } = props;
 
   const classes = useStyles();
-
+  
   return (
     <Card
       {...rest}
@@ -43,10 +68,10 @@ const LatestSales = props => {
             size="small"
             variant="text"
           >
-            Last 7 days <ArrowDropDownIcon />
+            This year
           </Button>
         }
-        title="Latest Sales"
+        title="Latest Sales (VND)"
       />
       <Divider />
       <CardContent>

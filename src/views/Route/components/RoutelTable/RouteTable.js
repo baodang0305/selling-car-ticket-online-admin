@@ -277,6 +277,7 @@ const RoutesTable = props => {
                           id="demo-simple-select-placeholder-label"
                           labelId="demo-simple-select-placeholder-label-label"
                           onChange={event => handleAddTime(event, Route)}
+                          value = ''
                         >
                           {Route.departureTime.map(item => (
                             <MenuItem value={item.time || 0 }>{item.time || 0}:00</MenuItem>
@@ -300,6 +301,7 @@ const RoutesTable = props => {
                           id="demo-simple-select-placeholder-label"
                           labelId="demo-simple-select-placeholder-label-label"
                           onChange={event => handleAddLocation(event, Route)}
+                          value = ''
                         >
                           {Route.getOnDeparture.map(item => (
                             <MenuItem value={item.departure || ''}>{item.departure || ''}</MenuItem>

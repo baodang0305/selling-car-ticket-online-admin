@@ -22,6 +22,8 @@ export const ADDLOCATIONROUTE = 'routes/newlocation'
 export const BILLS = 'bills'
 export const TOTAL = 'bills/total' 
 export const COUNT = 'users/count' 
+export const CHART = 'bills/chart' 
+
 
 
 
