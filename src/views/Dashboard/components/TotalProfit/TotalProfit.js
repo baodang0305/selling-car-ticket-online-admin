@@ -32,7 +32,7 @@ const useStyles = makeStyles(theme => ({
 
 const TotalProfit = props => {
   const { className, ...rest } = props;
-
+  const {total} = rest;
   const classes = useStyles();
 
   return (
@@ -58,7 +58,7 @@ const TotalProfit = props => {
               color="inherit"
               variant="h3"
             >
-              $23,200
+              {total} VND
             </Typography>
           </Grid>
           <Grid item>

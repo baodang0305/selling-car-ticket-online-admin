@@ -1,27 +1,62 @@
-import React from 'react';
+import React,{useState,useEffect} from 'react';
 import { makeStyles } from '@material-ui/styles';
 import { Grid } from '@material-ui/core';
 
 import {
   Budget,
   TotalUsers,
-  TasksProgress,
   TotalProfit,
   LatestSales,
   UsersByDevice,
   LatestProducts,
   LatestOrders
 } from './components';
-
+import axios from 'axios';
+import { API, TOTAL,COUNT } from '../../config';
+const apiTotal = `${API}${TOTAL}`;
+const apiCount = `${API}${COUNT}`;
 const useStyles = makeStyles(theme => ({
   root: {
     padding: theme.spacing(4)
   }
 }));
 
+
+
 const Dashboard = () => {
   const classes = useStyles();
-
+  const [total, setTotal] = useState();
+  const [count, setCount] = useState();
+  const header = `Bearer ${localStorage.getItem('token')}`;
+const loadTotal = async () => {
+  try {
+    const response = await axios.get(apiTotal, {
+      headers: { Authorization: header },
+    });
+    const {data} = response.data[0];
+    setTotal(data);
+    console.log(response.data);
+  } catch (error) {
+    console.log(error);
+  }
+};
+const loadCount = async () => {
+  try {
+    const response = await axios.get(apiCount, {
+      headers: { Authorization: header },
+    });
+    const {data} = response.data[0];
+    setCount(data);
+    console.log(response.data);
+  } catch (error) {
+    console.log(error);
+  }
+};
+useEffect(() => {
+  loadTotal();
+  loadCount();
+  // eslint-disable-next-line
+}, []);
   return (
     <div className={classes.root}>
       <Grid
@@ -35,7 +70,7 @@ const Dashboard = () => {
           xl={3}
           xs={12}
         >
-          <Budget />
+          <Budget total = {total}/>
         </Grid>
         <Grid
           item
@@ -44,7 +79,7 @@ const Dashboard = () => {
           xl={3}
           xs={12}
         >
-          <TotalUsers />
+          <TotalUsers count ={count} />
         </Grid>
         <Grid
           item
@@ -53,16 +88,7 @@ const Dashboard = () => {
           xl={3}
           xs={12}
         >
-          <TasksProgress />
-        </Grid>
-        <Grid
-          item
-          lg={3}
-          sm={6}
-          xl={3}
-          xs={12}
-        >
-          <TotalProfit />
+          <TotalProfit total = {total} />
         </Grid>
         <Grid
           item

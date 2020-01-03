@@ -129,7 +129,7 @@ const RoutesTable = props => {
     onSelected(selectedUsers);
   };
   const handleAddNewTime = async () =>{
-    console.log(idTime, valuesTime)
+    setOpenTime(false)
     const header = `Bearer ${localStorage.getItem('token')}`;
     await axios.post(api, {
       _id: idTime,
@@ -137,18 +137,18 @@ const RoutesTable = props => {
     }, {
       headers: { Authorization: header },
     });
-    setOpenTime(false)
+    
   }
   const handleAddNewLocation = async() =>{
-    console.log(idLocation, valuesLocation)
+    setOpenLocation(false)
     const header = `Bearer ${localStorage.getItem('token')}`;
     await axios.post(apiLocation, {
       _id: idLocation,
-      location : valuesLocation
+      departure : valuesLocation
     }, {
       headers: { Authorization: header },
     });
-    setOpenLocation(false)
+    
   }
   
 
@@ -215,11 +215,7 @@ const RoutesTable = props => {
       className={clsx(classes.root, className)}
     >
       <CardContent className={classes.content}>
-        {/* {showFromEdit ? <div className={classes.displayCombonent}> 
-          <Card className={classes.cardDetail}> 
-            <AccountDetails user={userUpdate.user}/>
-          </Card>
-        </div> : null} */}
+
         <PerfectScrollbar>
           <div className={classes.inner}>
             <Table>
@@ -281,10 +277,9 @@ const RoutesTable = props => {
                           id="demo-simple-select-placeholder-label"
                           labelId="demo-simple-select-placeholder-label-label"
                           onChange={event => handleAddTime(event, Route)}
-                          value={Route.departureTime[0].time}
                         >
                           {Route.departureTime.map(item => (
-                            <MenuItem value={item.time}>{item.time}:00</MenuItem>
+                            <MenuItem value={item.time || 0 }>{item.time || 0}:00</MenuItem>
                           ))}
                           <MenuItem value="AddTime">Add new time</MenuItem>
                           
@@ -305,10 +300,9 @@ const RoutesTable = props => {
                           id="demo-simple-select-placeholder-label"
                           labelId="demo-simple-select-placeholder-label-label"
                           onChange={event => handleAddLocation(event, Route)}
-                          value={Route.getOnDeparture[0].departure}
                         >
                           {Route.getOnDeparture.map(item => (
-                            <MenuItem value={item.departure}>{item.departure}</MenuItem>
+                            <MenuItem value={item.departure || ''}>{item.departure || ''}</MenuItem>
                           ))}
                           <MenuItem value="AddLocation" >Add New Location</MenuItem>
                           

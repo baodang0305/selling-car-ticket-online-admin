@@ -15,11 +15,14 @@ export const DELETEROUTE = 'routes/deleteroute';
 export const UPDATESTATUS = 'contracts/UpdateStatus';
 export const UPDATEWALLETADMIN = 'admin/updateWallet';
 export const BUDGET = 'contracts/BUDGET';
-export const TOTAL = 'contracts/TOTAL';
 export const REPORTS = 'report';
 export const LISTROUTE = 'routes'
 export const ADDTIMEROUTE = 'routes/newtime'
 export const ADDLOCATIONROUTE = 'routes/newlocation' 
+export const BILLS = 'bills'
+export const TOTAL = 'bills/total' 
+export const COUNT = 'users/count' 
+
 
 
 

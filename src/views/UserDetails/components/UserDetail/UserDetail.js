@@ -17,7 +17,7 @@ import {
   Switch,
 } from '@material-ui/core';
 import axios from 'axios';
-import {API , UPDATEUSER } from '../../../../config';
+import { API, UPDATEUSER } from '../../../../config';
 const api = `${API}${UPDATEUSER}`;
 
 const useStyles = makeStyles(() => ({
@@ -28,17 +28,14 @@ const UserDetail = props => {
   const { className, ...rest } = props;
   const classes = useStyles();
   const [values, setValues] = useState({
-    email: '',
-    isTutor: null,
-    isActivated: false,
-    isActiveToken: null,
-    name: '',
-    p_number: '',
-    urlAvatar: null,
-    address: null,
-    overview: '',
-    price: null,
-    rating: null
+    fullName: '',
+    birthDay: '',
+    gender: '',
+    address: '',
+    phoneNumber: '',
+    urlImg: '',
+    typeAccount: '',
+    email: ''
   });
 
   useEffect(() => {
@@ -50,35 +47,26 @@ const UserDetail = props => {
     setValues({
       ...values,
       [event.target.name]: event.target.value,
-      isActivated : event.target.checked
+      isActivated: event.target.checked
     });
   };
 
 
-  const updateRatting = (values)=>{
-    if (values.rating > 5){
-      return 5;
-    } else {
-      return values.rating;
-    }
-  };
+ 
   const header = `Bearer ${localStorage.getItem('token')}`;
 
   const loadData = async () => {
     try {
       const response = await axios.post(api, {
         _id: values._id,
-        email:values.email,
-        isTutor: values.isTutor,
-        isActivated: values.isActivated,
-        isActiveToken: values.isActiveToken,
-        name: values.name,
-        p_number: values.p_number,
-        urlAvatar: values.urlAvatar,
+        fullName: values.fullName,
+        birthDay: values.birthDay,
+        gender: values.gender,
         address: values.address,
-        overview: values.overview,
-        price: values.price,
-        rating:values.rating 
+        phoneNumber: values.phoneNumber,
+        urlImg: values.urlImg,
+        typeAccount: values.typeAccount,
+        email: values.email
       }, {
         headers: { Authorization: header },
       });
@@ -88,12 +76,12 @@ const UserDetail = props => {
     }
   };
 
-  const updateUser = ()=>{
+  const updateUser = () => {
     loadData();
-    console.log('update test:',values);
+    console.log('update test:', values);
   };
 
-  const isActive = (values)=>{
+  const isActive = (values) => {
     if (values.isActivated === true || values.isActivated === 'true') {
       return true;
     } else {
@@ -148,12 +136,12 @@ const UserDetail = props => {
             >
               <TextField
                 fullWidth
-                label=" name"
+                label="Full Name"
                 margin="dense"
-                name="Name"
+                name="fullName"
                 onChange={handleChange}
                 required
-                value={values.name || ''}
+                value={values.fullName || ''}
                 variant="outlined"
               />
             </Grid>
@@ -164,12 +152,12 @@ const UserDetail = props => {
             >
               <TextField
                 fullWidth
-                label="Overview"
+                label="Gender"
                 margin="dense"
-                name="overview"
+                name="gender"
                 onChange={handleChange}
                 required
-                value={values.overview || 'Not found'}
+                value={values.gender || 'Not found'}
                 variant="outlined"
               />
             </Grid>
@@ -180,12 +168,12 @@ const UserDetail = props => {
             >
               <TextField
                 fullWidth
-                label="Price"
+                label="BirthDay"
                 margin="dense"
-                name="price"
+                name="birthDay"
                 onChange={handleChange}
-                type="number"
-                value={values.price || '0'}
+                type="text"
+                value={values.birthDay || ''}
                 variant="outlined"
               />
             </Grid>
@@ -196,13 +184,13 @@ const UserDetail = props => {
             >
               <TextField
                 fullWidth
-                label="Rating"
+                label="Address"
                 margin="dense"
-                name="rating"
+                name="address"
                 onChange={handleChange}
                 required
-                type="number"
-                value={updateRatting(values) || '0'}
+                type="text"
+                value={values.address || ''}
                 variant="outlined"
               />
             </Grid>
@@ -213,23 +201,23 @@ const UserDetail = props => {
             >
               <TextField
                 fullWidth
-                label="p_number"
+                label="Phone Number"
                 margin="dense"
-                name="p_number"
+                name="phoneNumber"
                 onChange={handleChange}
                 required
-                value={values.p_number || '0'}
+                value={values.phoneNumber || ''}
                 variant="outlined"
               />
             </Grid>
           </Grid>
           <FormControlLabel
             control={
-              <Switch 
-                checked={isActive(values)|| false} 
+              <Switch
+                checked={isActive(values) || false}
                 name="isActivated"
                 onChange={handleChange}
-              />    
+              />
             }
             label="Active"
           />
@@ -239,7 +227,7 @@ const UserDetail = props => {
         <CardActions>
           <Button
             color="primary"
-            onClick ={updateUser}
+            onClick={updateUser}
             variant="contained"
           >
             Save details

@@ -7,9 +7,6 @@ import { getInitials } from 'helpers';
 // import moment from 'moment';
 import { makeStyles } from '@material-ui/styles';
 import {
-  Rating,
-} from '@material-ui/lab';
-import {
   Card,
   CardActions,
   CardContent,
@@ -40,10 +37,7 @@ const useStyles = makeStyles(theme => ({
   }
 }));
 
-const getCost = (values)=>{
-  const baseCost = values.price *1;
-  return baseCost.toString() + ' $';
-};
+
 
 const UserProfile = props => {
   const { className, ...rest } = props;
@@ -72,13 +66,7 @@ const UserProfile = props => {
   useEffect(() => {
     setValues(user);
   }, [user]);
-  const isRole = (values)=>{
-    if (values.isTutor) {
-      return 'Teacher';
-    } else {
-      return 'Student';
-    }
-  };
+
 
   return (
     <Card
@@ -92,21 +80,28 @@ const UserProfile = props => {
               gutterBottom
               variant="h2"
             >
-              {values.name}
+              {values.fullName}
             </Typography>
             <Typography
               className={classes.locationText}
               color="textSecondary"
               variant="body1"
-            >
-              {isRole(user)}
+            >Gender: 
+              {values.gender}
+            </Typography>
+            <Typography
+              className={classes.locationText}
+              color="textSecondary"
+              variant="body1"
+            >Type Account: 
+              {values.typeAccount}
             </Typography>
             <Typography
               className={classes.dateText}
               color="textSecondary"
               variant="body1"
-            >Overview:
-              {values.overview}
+            >Address:
+              {values.address}
             </Typography>
           </div>
           
@@ -117,9 +112,9 @@ const UserProfile = props => {
             <Avatar
               className={classes.avatar} 
               component="span"
-              src={values.urlAvatar}
+              src={values.urlImg}
             >
-              {getInitials(values.name)}
+              {getInitials(values.fullName)}
             </Avatar>
           </label>
         </div>
@@ -129,20 +124,15 @@ const UserProfile = props => {
             component="fieldset" 
             mb={3} 
           >
-            <Typography variant="body1">RATING</Typography>
-            <Rating 
-              name="read-only"
-              readOnly
-              size="large" 
-              value={values.rating} 
-            />
+<Typography variant="body1">Email: {values.email}</Typography>
+            
           </Box>
         </div>
       </CardContent>
       <Divider />
       <CardActions>
-        <Typography variant="body1">PRICE:</Typography>
-        <Typography variant="body1">{getCost(values)}</Typography>
+        <Typography variant="body1">PhoneNumber:</Typography>
+        <Typography variant="body1">{values.phoneNumber}</Typography>
       </CardActions>
     </Card>
   );
