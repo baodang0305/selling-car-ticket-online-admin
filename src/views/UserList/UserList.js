@@ -20,7 +20,7 @@ const UserList = () => {
   const [selectedUsers, setSelectedUsers] = useState([]);
   const classes = useStyles();
   let [users, setUsers] = useState([]);
- 
+  console.log(users)
   const loadData = async () => {
     try {
       const header = `Bearer ${localStorage.getItem('token')}`;

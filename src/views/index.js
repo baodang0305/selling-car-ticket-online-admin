@@ -9,3 +9,4 @@ export { default as AdminList} from './AdminList';
 export { default as Routes} from './Route';
 export { default as Typography } from './Typography';
 export { default as UserList } from './UserList';
+export {default as UserDetails} from './UserDetails';

@@ -127,20 +127,7 @@ const UsersTable = props => {
     console.log(user.user);
   };
 
-  const isRole = (user) => {
-    if (user.isTutor) {
-      return 'Teacher';
-    } else {
-      return 'Student';
-    }
-  };
-  const isActive = (user) => {
-    if (user.isActivated) {
-      return 'True';
-    } else {
-      return 'False';
-    }
-  };
+  
 
   function useOutsideAlerter(ref) {
     /**
@@ -205,9 +192,10 @@ const UsersTable = props => {
                   </TableCell>
                   <TableCell>Name</TableCell>
                   <TableCell>Email</TableCell>
-                  <TableCell>Name</TableCell>
-                  <TableCell>Role</TableCell>
-                  <TableCell>Active</TableCell>
+                  <TableCell>Gender</TableCell>
+                  <TableCell>Birthday</TableCell>
+                  <TableCell>Address</TableCell>
+                  <TableCell>typeAccount</TableCell>
                   <TableCell>Edit</TableCell>
                 </TableRow>
               </TableHead>
@@ -231,21 +219,23 @@ const UsersTable = props => {
                       <div className={classes.nameContainer}>
                         <Avatar
                           className={classes.avatar}
-                          src={user.urlAvatar}
+                          src={user.urlImg}
                         >
-                          {getInitials(user.lastName)}
+                          {getInitials(user.fullName)}
                         </Avatar>
-                        <Typography variant="body1">{user.lastName}</Typography>
+                        <Typography variant="body1">{user.fullName}</Typography>
                       </div>
                     </TableCell>
                     <TableCell>{user.email}</TableCell>
                     <TableCell>
-                      {user.name}
+                      {user.gender}
                     </TableCell>
-                    <TableCell>{isRole(user)}</TableCell>
+                    <TableCell>{user.birthDay}</TableCell>
                     <TableCell>
-                      {isActive(user)}
-                      {/* {moment(user.createdAt).format('DD/MM/YYYY')} */}
+                    {user.address}
+                    </TableCell>
+                    <TableCell>
+                    {user.typeAccount}
                     </TableCell>
                     <TableCell>
                       <Button

@@ -50,17 +50,14 @@ const UserDetail = (props) => {
     try {
       const response = await axios.post(api, {
         _id: values._id,
-        email:values.email,
-        isTutor: values.isTutor,
-        isActivated: values.isActivated,
-        isActiveToken: values.isActiveToken,
-        name: values.name,
-        p_number: values.p_number,
-        urlAvatar: values.urlAvatar,
+        fullName: values.fullName,
+        birthDay: values.birthDay,
+        gender: values.gender,
         address: values.address,
-        overview: values.overview,
-        price: values.price,
-        rating:values.rating 
+        phoneNumber: values.phoneNumber,
+        urlImg: values.urlImg,
+        typeAccount: values.typeAccount,
+        email: values.email
       }, {
         headers: { Authorization: header },
       });
@@ -118,12 +115,12 @@ const UserDetail = (props) => {
               <TextField
                 
                 fullWidth
-                label="Last name"
+                label="Full Name"
                 margin="dense"
-                name="name"
+                name="fullName"
                 onChange={handleChange}
                 required
-                value={values.name || ''}
+                value={values.fullName || ''}
                 variant="outlined"
                 
               />
@@ -153,13 +150,30 @@ const UserDetail = (props) => {
             >
               <TextField
                 fullWidth
-                label="Overview"
+                label="Phone Number"
                 margin="dense"
-                name="overview"
+                name="phoneNumber"
                 onChange={handleChange}
                 required
                 type="text"
-                value={values.overview || ''}
+                value={values.phoneNumber || ''}
+                variant="outlined"
+              />
+            </Grid>
+            <Grid
+              item
+              md={6}
+              xs={12}
+            >
+              <TextField
+                fullWidth
+                label="Gender"
+                margin="dense"
+                name="gender"
+                onChange={handleChange}
+                required
+                type="text"
+                value={values.gender || ''}
                 variant="outlined"
               />
             </Grid>
